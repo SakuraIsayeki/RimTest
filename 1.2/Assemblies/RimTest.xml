@@ -1,0 +1,909 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RimTest</name>
+    </assembly>
+    <members>
+        <member name="T:RimTest.Core.RimTestSettings">
+            <summary>
+            Main RimTest UI
+            </summary>
+        </member>
+        <member name="F:RimTest.Core.RimTestSettings.RunOwnTests">
+            <summary>
+            Decides if the mod run it's own tests or not
+            </summary>
+        </member>
+        <member name="F:RimTest.Core.RimTestSettings.RunAtStartup">
+            <summary>
+            Decides if the mod runs all the available non filtered tests at launch or not
+            </summary>
+        </member>
+        <member name="M:RimTest.Core.RimTestSettings.ExposeData">
+            <summary>
+            Data exposition for serialization and keeping settings saved between game runs
+            </summary>
+        </member>
+        <member name="M:RimTest.Core.RimTestSettings.DoWindowContents(UnityEngine.Rect)">
+            <summary>
+            Draws the RimTest UI main canvas
+            </summary>
+            <param name="canvas"></param>
+        </member>
+        <member name="T:RimTest.AssertionException">
+            <summary>
+            Used when the condition expected from an assertion is not reached. 
+            </summary>
+            <remarks>Throwing one indicates a test failure.</remarks>
+        </member>
+        <member name="M:RimTest.AssertionException.#ctor">
+            <summary>
+            constructor directly based on the base Exception
+            </summary>
+        </member>
+        <member name="M:RimTest.AssertionException.#ctor(System.String)">
+            <summary>
+            constructor directly based on the base Exception
+            </summary>
+        </member>
+        <member name="M:RimTest.AssertionException.#ctor(System.String,System.Exception)">
+            <summary>
+            constructor directly based on the base Exception
+            </summary>
+        </member>
+        <member name="M:RimTest.AssertionException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            constructor directly based on the base Exception
+            </summary>
+        </member>
+        <member name="T:RimTest.Assertion">
+            <summary>
+            Generic assertion grammar object.
+            </summary>
+            <remarks>
+            Usage: Assert(value)[.To|.Do|.Be|.Is|.Not].Comparison([Parameters...])
+            </remarks>
+        </member>
+        <member name="M:RimTest.Assertion.Assert(System.IComparable)">
+            <summary>
+            Entry point for value based assertions
+            </summary>
+            <param name="thing">A comparable value</param>
+            <returns>An AssertValue, specialized in asserting values</returns>
+        </member>
+        <member name="M:RimTest.Assertion.AssertFunc(System.Func{System.Object})">
+            <summary>
+            Entry point for Function based assertions
+            </summary>
+            <param name="thing">A function</param>
+            <returns>An AssertFunc, specialized in asserting Functions</returns>
+        </member>
+        <member name="M:RimTest.Assertion.AssertFunc(System.Action)">
+            <summary>
+            Entry point for Action based assertions
+            </summary>
+            <param name="thing">An Action</param>
+            <returns>An AssertAction, specialized in asserting Actions</returns>
+        </member>
+        <member name="F:RimTest.Assertion.negated">
+            <summary>
+            Negation flag, can be double negated with multiple uses of the .Not grammar, used to negate a check expectation. (i.e. Assert(1).Not.To.Be.EqualTo(2))
+            </summary>
+        </member>
+        <member name="T:RimTest.AssertValue">
+            <summary>
+            Specialized Assertion for Values
+            </summary>
+            <remarks>Allows the EqualTo, LessThan, GreaterThan, BetweenInclusive, BetweenExclusive, TheSame, Null, True and False checks.</remarks>
+        </member>
+        <member name="M:RimTest.AssertValue.#ctor(System.IComparable)">
+            <summary>
+            base constructor
+            </summary>
+            <param name="thing">The value to check</param>
+        </member>
+        <member name="P:RimTest.AssertValue.Not">
+            <summary>
+            Negation grammar link, negates the current assertion.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertValue.To">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertValue.Is">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertValue.Be">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertValue.Do">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="M:RimTest.AssertValue.EqualTo(System.IComparable)">
+            <summary>
+            Check: asserted value EQUALS TO otherThing
+            </summary>
+            <param name="otherThing">check value</param>
+        </member>
+        <member name="M:RimTest.AssertValue.LessThan(System.IComparable)">
+            <summary>
+            Check: asserted value LESS THAN otherThing
+            </summary>
+            <param name="otherThing">check value</param>
+        </member>
+        <member name="M:RimTest.AssertValue.GreaterThan(System.IComparable)">
+            <summary>
+            Check: asserted value GREATER THAN otherThing
+            </summary>
+            <param name="otherThing">check value</param>
+        </member>
+        <member name="M:RimTest.AssertValue.BetweenInclusive(System.IComparable,System.IComparable)">
+            <summary>
+            Check: minThing LESS THAN or EQUAL TO assertd value AND asserted value LESS THAN or EQUAL TO maxThing
+            </summary>
+            <param name="minThing">min check value</param>
+            <param name="maxThing">max check value</param>
+        </member>
+        <member name="M:RimTest.AssertValue.BetweenExclusive(System.IComparable,System.IComparable)">
+            <summary>
+            Check: minThing LESS THAN assertd value AND asserted value LESS THAN maxThing
+            </summary>
+            <param name="minThing">min check value</param>
+            <param name="maxThing">max check value</param>
+        </member>
+        <member name="M:RimTest.AssertValue.TheSame(System.IComparable)">
+            <summary>
+            Check: asserted value SAME AS otherThing
+            </summary>
+            <param name="otherThing">check value</param>
+        </member>
+        <member name="M:RimTest.AssertValue.Null">
+            <summary>
+            Check: thing IS null
+            </summary>
+        </member>
+        <member name="M:RimTest.AssertValue.True">
+            <summary>
+            Check: thing IS true
+            </summary>
+        </member>
+        <member name="M:RimTest.AssertValue.False">
+            <summary>
+            Check: thing IS false
+            </summary>
+        </member>
+        <member name="T:RimTest.AssertFunc">
+            <summary>
+            Specialized Assertion for Functions
+            </summary>
+            <remarks>Allows the Throw check.</remarks>
+        </member>
+        <member name="M:RimTest.AssertFunc.#ctor(System.Func{System.Object})">
+            <summary>
+            base constructor
+            </summary>
+            <param name="thing">The function to check</param>
+        </member>
+        <member name="P:RimTest.AssertFunc.Not">
+            <summary>
+            Negation grammar link, negates the current assertion.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertFunc.To">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertFunc.Is">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertFunc.Be">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertFunc.Do">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="M:RimTest.AssertFunc.#ctor">
+            <summary>
+            Internal constructor for AssertAction usage
+            </summary>
+            <remarks>Do NOT use manually</remarks>
+        </member>
+        <member name="M:RimTest.AssertFunc.Throw">
+            <summary>
+            Check: executing asserted callable throws an error.
+            </summary>
+        </member>
+        <member name="T:RimTest.AssertAction">
+            <summary>
+            Specialized Assertion for Actions
+            </summary>
+            <remarks>Allows the Throw check.</remarks>
+        </member>
+        <member name="M:RimTest.AssertAction.#ctor(System.Action)">
+            <summary>
+            base constructor
+            </summary>
+            <param name="thing">The function to check</param>
+        </member>
+        <member name="P:RimTest.AssertAction.Not">
+            <summary>
+            Negation grammar link, negates the current assertion.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertAction.To">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertAction.Is">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertAction.Be">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="P:RimTest.AssertAction.Do">
+            <summary>
+            Grammar link, doesn't have any effect.
+            </summary>
+            <remarks>All grammar links can be chained as needed.</remarks>
+        </member>
+        <member name="M:RimTest.AssertAction.Throw">
+            <summary>
+            Check: executing asserted callable throws an error.
+            </summary>
+        </member>
+        <member name="T:RimTest.Testing.AssemblyStatus">
+            <summary>
+            Registered Assembly current test execution status.
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.AssemblyStatus.ERROR">
+            <summary>
+            Any test suite fails
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.AssemblyStatus.WARNING">
+            <summary>
+            Any test suite is skipped or have warnings
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.AssemblyStatus.UNKNOWN">
+            <summary>
+            Any test suite is not run
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.AssemblyStatus.PASS">
+            <summary>
+            All test suites are successful
+            </summary>
+        </member>
+        <member name="T:RimTest.Testing.AssemblyStatusExtension">
+            <summary>
+            Utils for AssemblyStatus
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.AssemblyStatusExtension.StatusSymbol(RimTest.Testing.AssemblyStatus)">
+            <summary>
+            Value to string symbol converter
+            </summary>
+            <param name="status"></param>
+            <returns>user friendly string representation</returns>
+        </member>
+        <member name="T:RimTest.Testing.Runner">
+            <summary>
+            Execute registered tests and update the status of registered tests, test suites and tested assemblies
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.Runner.RunTest(System.Reflection.MethodInfo)">
+            <summary>
+            Check a test validity and run it if possible. 
+            Update the status to TestStatus.SKIP if invalid, TestStatus.PASS if succesfull, TestStatus.ERROR if failed. 
+            Registers any detected error to the test.
+            </summary>
+            <param name="test"></param>
+            <seealso cref="T:RimTest.Testing.TestStatus"/>
+        </member>
+        <member name="M:RimTest.Testing.Runner.RunTestSuite(System.Type)">
+            <summary>
+            Check a test suite validity and run its tests if possible. 
+            Update the status to TestSuiteStatus.SKIP if invalid, then TestSuiteStatus.ERROR if any test fails, then TestSuiteStatus.WARNING if any test is skipped, then TestSuiteStatus.UNKNOWN if any test is not run, then TestSuiteStatus.PASS if succesfull. 
+            Registers any detected error to the test suite.
+            </summary>
+            <param name="testSuite"></param>
+            <seealso cref="T:RimTest.Testing.TestSuiteStatus"/>
+        </member>
+        <member name="M:RimTest.Testing.Runner.RunAssembly(System.Reflection.Assembly)">
+            <summary>
+            Run a assembly test suites. 
+            Update the status to AssemblyStatus.ERROR if any test suite fails, then AssemblyStatus.WARNING if any test suite is skipped or have warnings, then AssemblyStatus.UNKNOWN if any test suite is not run, then AssemblyStatus.PASS if succesfull. 
+            Registers any detected error to the test suite.
+            </summary>
+            <param name="asm"></param>
+            <seealso cref="T:RimTest.Testing.AssemblyStatus"/>
+        </member>
+        <member name="M:RimTest.Testing.Runner.RunAllRegisteredTests">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:RimTest.Testing.TimeElapsedExplorer">
+            <summary>
+            Time profiling system
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.TimeElapsedExplorer.UpdateAllAssembliesTimeElapsed">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.TimeElapsedExplorer.SetAssemblyTimeElapsed(System.Reflection.Assembly,System.Double)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <param name="time"></param>
+        </member>
+        <member name="M:RimTest.Testing.TimeElapsedExplorer.UpdateAssemblyTimeElapsed(System.Reflection.Assembly)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+        </member>
+        <member name="M:RimTest.Testing.TimeElapsedExplorer.GetAssemblyTimeElapsed(System.Reflection.Assembly)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.TimeElapsedExplorer.SetTestSuiteTimeElapsed(System.Type,System.Double)">
+            <summary>
+            </summary>
+            <param name="ts"></param>
+            <param name="time"></param>
+        </member>
+        <member name="M:RimTest.Testing.TimeElapsedExplorer.UpdateTestSuiteTimeElapsed(System.Type)">
+            <summary>
+            </summary>
+            <param name="ts"></param>
+        </member>
+        <member name="M:RimTest.Testing.TimeElapsedExplorer.GetTestSuiteTimeElapsed(System.Type)">
+            <summary>
+            </summary>
+            <param name="ts"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.TimeElapsedExplorer.SetTestTimeElapsed(System.Reflection.MethodInfo,System.Double)">
+            <summary>
+            </summary>
+            <param name="test"></param>
+            <param name="time"></param>
+        </member>
+        <member name="M:RimTest.Testing.TimeElapsedExplorer.GetTestTimeElapsed(System.Reflection.MethodInfo)">
+            <summary>
+            </summary>
+            <param name="test"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RimTest.Testing.FilteredExplorer">
+            <summary>
+            Keeps track of filtered tests for easy test finding
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.failEnabledAsm">
+            <summary>
+            Are failed state asm shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.warningEnabledAsm">
+            <summary>
+            Are warning state asm shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.unknownEnabledAsm">
+            <summary>
+            Are unknown state asm shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.passEnabledAsm">
+            <summary>
+            Are passed state asm shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.failEnabledTS">
+            <summary>
+            Are failed state TS shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.warningEnabledTS">
+            <summary>
+            Are warning state TS shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.unknownEnabledTS">
+            <summary>
+            Are unknown state TS shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.skipEnabledTS">
+            <summary>
+            Are skipped state TS shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.passEnabledTS">
+            <summary>
+            Are passed state TS shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.failEnabledT">
+            <summary>
+            Are failed state T shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.unknownEnabledT">
+            <summary>
+            Are unknown state T shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.skipEnabledT">
+            <summary>
+            Are skipped state T shown?
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.FilteredExplorer.passEnabledT">
+            <summary>
+            Are passed state T shown?
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.UpdateFilter(System.Text.RegularExpressions.Regex)">
+            <summary>
+            </summary>
+            <param name="filter"></param>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.DoesAssemblyStatusMatchesFilter(System.Reflection.Assembly)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.DoesTestSuiteStatusMatchesFilter(System.Type)">
+            <summary>
+            </summary>
+            <param name="ts"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.DoesTestStatusMatchesFilter(System.Reflection.MethodInfo)">
+            <summary>
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.DoesAssemblyMatchesFilter(System.Reflection.Assembly)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.DoesTestSuiteMatchesFilter(System.Type)">
+            <summary>
+            </summary>
+            <param name="testSuite"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.DoesTestMatchesFilter(System.Reflection.MethodInfo)">
+            <summary>
+            </summary>
+            <param name="test"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.GetFilteredAssemblies">
+            <summary>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.GetFilteredTestSuites">
+            <summary>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.GetFilteredTestSuites(System.Reflection.Assembly)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.GetFilteredTests">
+            <summary>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.FilteredExplorer.GetFilteredTests(System.Type)">
+            <summary>
+            </summary>
+            <param name="ts"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RimTest.Testing.StatusExplorer">
+            <summary>
+            Keeps track of test statuses
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.StatusExplorer.UpdateAllStatusCounts">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.StatusExplorer.UpdateAssemblyStatusCount(RimTest.Testing.AssemblyStatus)">
+            <summary>
+            </summary>
+            <param name="status"></param>
+        </member>
+        <member name="M:RimTest.Testing.StatusExplorer.GetAssemblyStatusCount(RimTest.Testing.AssemblyStatus)">
+            <summary>
+            </summary>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.StatusExplorer.UpdateTestSuiteStatusCount(RimTest.Testing.TestSuiteStatus)">
+            <summary>
+            </summary>
+            <param name="status"></param>
+        </member>
+        <member name="M:RimTest.Testing.StatusExplorer.GetTestSuiteStatusCount(RimTest.Testing.TestSuiteStatus)">
+            <summary>
+            </summary>
+            <param name="status"></param>
+        </member>
+        <member name="M:RimTest.Testing.StatusExplorer.UpdateTestStatusCount(RimTest.Testing.TestStatus)">
+            <summary>
+            </summary>
+            <param name="status"></param>
+        </member>
+        <member name="M:RimTest.Testing.StatusExplorer.GetTestStatusCount(RimTest.Testing.TestStatus)">
+            <summary>
+            </summary>
+            <param name="status"></param>
+        </member>
+        <member name="T:RimTest.Testing.AssemblyExplorer">
+            <summary>
+            Stores and manages Assembly level data, aka known statuses and exceptions.
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.AssemblyExplorer.GetAllKnownAssemblies">
+            <summary>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.AssemblyExplorer.SetAssemblyStatus(System.Reflection.Assembly,RimTest.Testing.AssemblyStatus)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <param name="status"></param>
+        </member>
+        <member name="M:RimTest.Testing.AssemblyExplorer.SetAssemblyError(System.Reflection.Assembly,System.Exception)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <param name="error"></param>
+        </member>
+        <member name="M:RimTest.Testing.AssemblyExplorer.GetAssemblyStatus(System.Reflection.Assembly)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <returns>The current registered AssemblyStatus else AssemblyStatus.UNKNOWN</returns>
+            <seealso cref="T:RimTest.Testing.AssemblyStatus"/>
+        </member>
+        <member name="M:RimTest.Testing.AssemblyExplorer.GetAssemblyError(System.Reflection.Assembly)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <returns>The current registered Exception else null if none registered</returns>
+        </member>
+        <member name="T:RimTest.Testing.Assembly2TestSuiteLink">
+            <summary>
+            Stores and manage the links between registered assemblies and their registered test suites
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.Assembly2TestSuiteLink.RegisterTestSuite2Asm(System.Type,System.Reflection.Assembly)">
+            <summary>
+            Can register multiple unique test suites to the same assembly. Will not store duplicates.
+            </summary>
+            <param name="testSuite"></param>
+            <param name="asm"></param>
+        </member>
+        <member name="M:RimTest.Testing.Assembly2TestSuiteLink.GetAssemblies">
+            <summary>
+            </summary>
+            <returns>A list of all known assemblies</returns>
+        </member>
+        <member name="M:RimTest.Testing.Assembly2TestSuiteLink.GetTestSuites(System.Reflection.Assembly)">
+            <summary>
+            </summary>
+            <param name="asm"></param>
+            <returns>A set of registered tests suites for this assembly. Returns an empty set if the assembly is not registered.</returns>
+        </member>
+        <member name="T:RimTest.Testing.TestSuiteExplorer">
+            <summary>
+            Stores and manages Test Suite level data, aka known statuses and exceptions.
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.TestSuiteExplorer.GetAllKnownTestSuites">
+            <summary>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RimTest.Testing.TestSuiteExplorer.SetTestSuiteStatus(System.Type,RimTest.Testing.TestSuiteStatus)">
+            <summary>
+            </summary>
+            <param name="testSuite"></param>
+            <param name="status"></param>
+        </member>
+        <member name="M:RimTest.Testing.TestSuiteExplorer.SetTestSuiteError(System.Type,System.Exception)">
+            <summary>
+            </summary>
+            <param name="testSuite"></param>
+            <param name="error"></param>
+        </member>
+        <member name="M:RimTest.Testing.TestSuiteExplorer.GetTestSuiteStatus(System.Type)">
+            <summary>
+            </summary>
+            <param name="testSuite"></param>
+            <returns>current registered TestSuiteStatus else TestSuiteStatus.UNKNOWN</returns>
+        </member>
+        <member name="M:RimTest.Testing.TestSuiteExplorer.GetTestSuiteError(System.Type)">
+            <summary>
+            </summary>
+            <param name="testSuite"></param>
+            <returns>current registered Exception else null if none registered</returns>
+        </member>
+        <member name="T:RimTest.Testing.TestSuite2TestLink">
+            <summary>
+            Stores and manage the links between registered test suites and their registered tests
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.TestSuite2TestLink.RegisterTest2TestSuite(System.Reflection.MethodInfo,System.Type)">
+            <summary>
+            </summary>
+            <param name="test"></param>
+            <param name="testSuite"></param>
+        </member>
+        <member name="M:RimTest.Testing.TestSuite2TestLink.GetTests(System.Type)">
+            <summary>
+            </summary>
+            <param name="testSuite"></param>
+            <returns>A set of registered tests for this test suite. Returns an empty set if the test suite is not registered.</returns>
+        </member>
+        <member name="T:RimTest.Testing.TestExplorer">
+            <summary>
+            Stores and manages Test level data, aka known statuses and exceptions.
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.TestExplorer.SetTestStatus(System.Reflection.MethodInfo,RimTest.Testing.TestStatus)">
+            <summary>
+            </summary>
+            <param name="test"></param>
+            <param name="status"></param>
+        </member>
+        <member name="M:RimTest.Testing.TestExplorer.SetTestError(System.Reflection.MethodInfo,System.Exception)">
+            <summary>
+            </summary>
+            <param name="test"></param>
+            <param name="error"></param>
+        </member>
+        <member name="M:RimTest.Testing.TestExplorer.GetTestStatus(System.Reflection.MethodInfo)">
+            <summary>
+            </summary>
+            <param name="test"></param>
+            <returns>current registered TestStatus else TestStatus.UNKNOWN</returns>
+        </member>
+        <member name="M:RimTest.Testing.TestExplorer.GetTestError(System.Reflection.MethodInfo)">
+            <summary>
+            </summary>
+            <param name="test"></param>
+            <returns>current registered Exception else null if none registered</returns>
+        </member>
+        <member name="M:RimTest.Testing.TestExplorer.GetAllKnownTests">
+            <summary>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:RimTest.Testing.Explorer">
+            <summary>
+            Explores and registers every tested assembly, test suites and tests currently loaded.
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.Explorer.ExploreAndRegisterAssemblies">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.Explorer.ExploreAndRegisterTestSuites(System.Reflection.Assembly)">
+            <summary>
+            </summary>
+            <param name="asm">Entry point</param>
+        </member>
+        <member name="M:RimTest.Testing.Explorer.ExploreAndRegisterTests(System.Type)">
+            <summary>
+            </summary>
+            <param name="testSuite">Entry point</param>
+        </member>
+        <member name="T:RimTest.Testing.TestStatus">
+            <summary>
+            Registered Test current execution status.
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.TestStatus.SKIP">
+            <summary>
+            invalid test
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.TestStatus.UNKNOWN">
+            <summary>
+            not run yet
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.TestStatus.ERROR">
+            <summary>
+            failed
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.TestStatus.PASS">
+            <summary>
+            passed
+            </summary>
+        </member>
+        <member name="T:RimTest.Testing.TestStatusExtension">
+            <summary>
+            Utils for TestStatus
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.TestStatusExtension.StatusSymbol(RimTest.Testing.TestStatus)">
+            <summary>
+            Value to string symbol converter
+            </summary>
+            <param name="status"></param>
+            <returns>user friendly string representation</returns>
+        </member>
+        <member name="T:RimTest.Testing.TestSuiteStatus">
+            <summary>
+            Registered Test Suite current test execution status.
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.TestSuiteStatus.SKIP">
+            <summary>
+            Invalid Test Suite
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.TestSuiteStatus.ERROR">
+            <summary>
+            Any test fails
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.TestSuiteStatus.WARNING">
+            <summary>
+            Any test skipped
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.TestSuiteStatus.UNKNOWN">
+            <summary>
+            Any test is not run
+            </summary>
+        </member>
+        <member name="F:RimTest.Testing.TestSuiteStatus.PASS">
+            <summary>
+            All tests are successful
+            </summary>
+        </member>
+        <member name="T:RimTest.Testing.TestSuiteStatusExtension">
+            <summary>
+            Utils for TestStatus
+            </summary>
+        </member>
+        <member name="M:RimTest.Testing.TestSuiteStatusExtension.StatusSymbol(RimTest.Testing.TestSuiteStatus)">
+            <summary>
+            Value to string symbol converter
+            </summary>
+            <param name="status"></param>
+            <returns>user friendly string representation</returns>
+        </member>
+        <member name="T:RimTest.Test">
+            <summary>
+            Test function meta-attribute, used to register a function as a test to be discovered by RimTest.
+            </summary>
+            <remarks>
+            Only used when the test function is a method of a class with the meta-attribute TestSuite. 
+            Valid Tests have a void signature, are static, public and do not accept parameters, see code example
+            </remarks>
+            <code>
+            [Test]
+            public static void testA(){};
+            </code>
+        </member>
+        <member name="T:RimTest.RimTestMod">
+            <summary>
+            This is the mod entry point run when every assemblies of loaded mods are now loaded and available.
+            </summary>
+            <remarks>We can run test discovery at this point.</remarks>
+        </member>
+        <member name="M:RimTest.RimTestMod.#ctor(Verse.ModContentPack)">
+            <summary>
+            Said entry point
+            </summary>
+        </member>
+        <member name="P:RimTest.RimTestMod.Settings">
+            <summary>
+             Settings getter
+            </summary>
+        </member>
+        <member name="M:RimTest.RimTestMod.DoSettingsWindowContents(UnityEngine.Rect)">
+            <summary>
+             Settings UI drawing logic
+            </summary>
+        </member>
+        <member name="M:RimTest.RimTestMod.SettingsCategory">
+            <summary>
+             Mod header in the mod config UI
+            </summary>
+        </member>
+        <member name="T:RimTest.TestSuite">
+            <summary>
+            TestSuite meta-attribute, used to register a class as a test suite to be discovered by RimTest.
+            </summary>
+            <remarks>
+            Only used when the class contains valid tests functions decorated with the meta-attribute Test. 
+            Valid Test Suites are static and public, see code example
+            </remarks>
+            <code>
+            [TestSuite]
+            public static class testSuiteA{
+                //tests
+            }
+            </code>
+        </member>
+        <member name="T:RimTest.Util.Tally`1">
+            <summary>
+            Dictionnary&lt;T, int&gt; auto defaulting to 0. Allows simple tallying syntax such as tally[element]++  
+            </summary>
+            <example>
+            <![CDATA[
+            // without Tally
+            Dictionary<T, int> old = new Dictionary<T, int>();
+            foreach(var k in Enum.GetValue(typeof(T))){ old[k] = 0; }
+            // with Tally
+            Tally<T> now = new Tally<T>();
+            ]]>
+            </example>
+            <typeparam name="T">Enumeration</typeparam>
+        </member>
+        <member name="M:RimTest.Util.Tally`1.#ctor">
+            <summary>
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4CB42811-3FDB-4BA6-A8C9-5CB3BE0C0EEC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RimTest</RootNamespace>
+    <AssemblyName>RimTest</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>1.2\Assemblies\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>none</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>1.2\Assemblies\RimTest.xml</DocumentationFile>
+    <LangVersion>8.0</LangVersion>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>1.2\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\workshop\content\294100\818773962\Assemblies\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="HugsLib">
+      <HintPath>..\..\..\..\workshop\content\294100\818773962\Assemblies\HugsLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Core\RimTestSettings.cs" />
+    <Compile Include="Source\Testing\Assertion.cs" />
+    <Compile Include="Source\Testing\Status\AssemblyStatus.cs" />
+    <Compile Include="Source\Testing\Dialog_Controller.cs" />
+    <Compile Include="Source\Testing\Runner.cs" />
+    <Compile Include="Source\Testing\Controller.cs" />
+    <Compile Include="Source\Testing\Exceptions\InvalidTestException.cs" />
+    <Compile Include="Source\Testing\Exceptions\InvalidTestSuiteException.cs" />
+    <Compile Include="Source\Patches\DebugWindowsOpener_Patch.cs" />
+    <Compile Include="Source\Testing\Explorer.cs" />
+    <Compile Include="Source\Testing\Status\TestStatus.cs" />
+    <Compile Include="Source\Testing\Status\TestSuiteStatus.cs" />
+    <Compile Include="Source\Testing\Validator.cs" />
+    <Compile Include="Source\Testing\Viewer.cs" />
+    <Compile Include="Source\tests\assertion\BetweenExclusive.cs" />
+    <Compile Include="Source\tests\assertion\BetweenInclusive.cs" />
+    <Compile Include="Source\Annotations\Test.cs" />
+    <Compile Include="Source\tests\assertion\False.cs" />
+    <Compile Include="Source\tests\Example\ExampleTestSuite.cs" />
+    <Compile Include="Source\tests\testing\explorer\TestSuiteExplorer.cs" />
+    <Compile Include="Source\tests\testing\validator\TestSuites.cs" />
+    <Compile Include="Source\tests\assertion\True.cs" />
+    <Compile Include="Source\tests\testing\validator\Test.cs" />
+    <Compile Include="Source\tests\assertion\Throw.cs" />
+    <Compile Include="Source\tests\assertion\Null.cs" />
+    <Compile Include="Source\tests\assertion\SameAs.cs" />
+    <Compile Include="Source\tests\assertion\GreaterThan.cs" />
+    <Compile Include="Source\tests\assertion\LessThan.cs" />
+    <Compile Include="Source\tests\assertion\Equals.cs" />
+    <Compile Include="Source\Core\RimTestMod.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Annotations\TestSuite.cs" />
+    <Compile Include="Source\Util\Tally.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="1.2\Assemblies\RimTest.xml" />
+    <Content Include="About\About.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Source\tests\testing\runner\" />
+    <Folder Include="Source\tests\testing\viewer\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
