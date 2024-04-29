@@ -1,93 +1,125 @@
-﻿//Original patch from hugslib
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using HarmonyLib;
+using RimTest.Testing;
+using Verse;
 
-namespace RimTest.Patches
+namespace RimTest.Patches;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable once UnusedType.Global
+
+
+/// <summary>
+/// Adds an entry point to draw and additional debug button on the toolbar.
+/// The infix is necessary to catch the WidgetRow that the stock buttons are drawn to.
+/// </summary>
+/// <remarks>
+///	Original patch from HugsLib
+/// </remarks>
+[HarmonyPatch(typeof(DebugWindowsOpener))]
+[HarmonyPatch("DrawButtons")]
+internal static class DebugWindowsOpener_Patch
 {
-    /*
-	[HarmonyPatch(typeof(DebugWindowsOpener))]
-	[HarmonyPatch("DrawButtons")]
-	internal class DebugWindowsOpener_Patch
-	{
-		private static bool patched;
+	private static bool _patched;
 
-		[HarmonyPrepare]
-		public static void Prepare()
-		{
-			LongEventHandler.ExecuteWhenFinished((Action)delegate
+	[HarmonyPrepare]
+	public static bool Prepare()
+	{
+		LongEventHandler.ExecuteWhenFinished(() =>
 			{
-				if (!patched)
+				if (!_patched)
 				{
 					Log.Warning("DebugWindowsOpener_Patch could not be applied.");
 				}
-			});
-		}
-
-		[HarmonyTranspiler]
-		public static IEnumerable<CodeInstruction> DrawAdditionalButtons(IEnumerable<CodeInstruction> instructions)
-		{
-
-			patched = false;
-			CodeInstruction[] instructionsArr = instructions.ToArray();
-			int widgetRowIndex = TryGetLocalIndexOfConstructedObject(instructionsArr, typeof(WidgetRow));
-			CodeInstruction[] array = instructionsArr;
-			foreach (CodeInstruction inst in array)
-			{
-				if (!patched && widgetRowIndex >= 0 && inst.opcode == OpCodes.Bne_Un)
+				else
 				{
-					yield return new CodeInstruction(OpCodes.Ldloc, widgetRowIndex);
-					yield return new CodeInstruction(OpCodes.Call, new Action<WidgetRow>(TestingController.DrawDebugToolbarButton).Method);
-					patched = true;
+					Log.Message("DebugWindowsOpener_Patch applied.");
 				}
-				yield return inst;
 			}
-		}
+		);
 
-		private static int TryGetLocalIndexOfConstructedObject(IEnumerable<CodeInstruction> instructions, Type constructedType, Type[] constructorParams = null)
+		return true;
+	}
+
+	[HarmonyTranspiler]
+	public static IEnumerable<CodeInstruction> DrawAdditionalButtons(IEnumerable<CodeInstruction> instructions)
+	{
+		_patched = false;
+		CodeInstruction[] instructionsArr = instructions.ToArray();
+		FieldInfo widgetRowField = AccessTools.Field(typeof(DebugWindowsOpener), "widgetRow");
+
+		Log.Message($"DebugWindowsOpener_Patch: widgetRowField: {widgetRowField}");
+		
+		foreach (CodeInstruction inst in instructionsArr)
 		{
-			ConstructorInfo constructorInfo = AccessTools.Constructor(constructedType, constructorParams);
-			int num = -1;
-			if (constructorInfo == null)
+			Log.Message($"DebugWindowsOpener_Patch: inst: {inst}");
+			
+			if (!_patched && widgetRowField is not null && inst.opcode == OpCodes.Bne_Un)
 			{
-				Log.Error($"Could not reflect constructor for type {constructedType}: {Environment.StackTrace}");
-				return num;
+				Log.Message($"Not patched DebugWindowsOpener_Patch: inst: {inst}");
+				
+				yield return new(OpCodes.Ldarg_0);
+				yield return new(OpCodes.Ldfld, widgetRowField);
+				yield return new(OpCodes.Call,
+					((Action<WidgetRow>)TestingController.DrawDebugToolbarButton).Method
+				);
+
+				_patched = true;
 			}
-			CodeInstruction codeInstruction = null;
-			foreach (CodeInstruction instruction in instructions)
-			{
-				if (codeInstruction != null && codeInstruction.opcode == OpCodes.Newobj && constructorInfo.Equals(codeInstruction.operand))
-				{
-					if (instruction.opcode == OpCodes.Stloc_0)
-					{
-						num = 0;
-					}
-					else if (instruction.opcode == OpCodes.Stloc_1)
-					{
-						num = 1;
-					}
-					else if (instruction.opcode == OpCodes.Stloc_2)
-					{
-						num = 2;
-					}
-					else if (instruction.opcode == OpCodes.Stloc_3)
-					{
-						num = 3;
-					}
-					else if (instruction.opcode == OpCodes.Stloc && instruction.operand is int)
-					{
-						num = (int)instruction.operand;
-					}
-					if (num >= 0)
-					{
-						break;
-					}
-				}
-				codeInstruction = instruction;
-			}
-			if (num < 0)
-			{
-				Log.Error($"Could not determine local index for constructed type {constructedType}: {Environment.StackTrace}");
-			}
-			return num;
+
+			yield return inst;
 		}
 	}
-	*/
+}
+
+/// <summary>
+/// Extends the width of the immediate window the dev toolbar buttons are drawn to to accommodate an additional button
+/// </summary>
+[HarmonyPatch(typeof(DebugWindowsOpener))]
+[HarmonyPatch("DevToolStarterOnGUI")]
+internal class DevToolStarterOnGUI_Patch
+{
+	private static bool _patched;
+
+	[HarmonyPrepare]
+	public static bool Prepare()
+	{
+		LongEventHandler.ExecuteWhenFinished(() =>
+			{
+				if (!_patched)
+				{
+					Log.Error("DevToolStarterOnGUI_Patch could not be applied.");
+				}
+				else
+				{
+					Log.Message("DevToolStarterOnGUI_Patch applied.");
+				}
+			}
+		);
+
+		return true;
+	}
+
+	[HarmonyTranspiler]
+	public static IEnumerable<CodeInstruction> ExtendButtonsWindow(IEnumerable<CodeInstruction> instructions)
+	{
+		_patched = false;
+
+		foreach (CodeInstruction inst in instructions)
+		{
+			if (!_patched && inst.opcode == OpCodes.Ldc_R4 && 28f.Equals(inst.operand))
+			{
+				// add one to the number of expected buttons
+				yield return new(OpCodes.Ldc_R4, 1f);
+				yield return new(OpCodes.Add);
+
+				_patched = true;
+			}
+
+			yield return inst;
+		}
+	}
 }
